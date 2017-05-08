@@ -12,10 +12,27 @@ body {
   margin: 0 auto;
   text-align: center;
   user-select: none;
+  font-family: 'David Libre', sans-serif;
 }
 
 h1 {
   padding: 50px 0 0;
+  font-size: 2.5rem;
+}
+
+.scoreboard {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+  width: 100%;
+  max-width: 500px;
+}
+
+.score {
+  width: 50px;
+  height: 50px;
+  /* TODO: complete this */
 }
 
 .start-menu {
@@ -66,10 +83,12 @@ h1 {
   width: 60px;
   height: 60px;
   border: 4px solid #ddd;
-  padding: calc(60px /4);
+  /*padding: calc(60px /4);*/
   margin: 20px;
   cursor: pointer;
   transition: border 0.3s;
+  font-family: 'Rock Salt', sans-serif;
+  font-size: 1.5rem;
 }
 
 .gamepiece-btn:hover {
@@ -93,10 +112,13 @@ h1 {
   width: 100%;
   height: 480px;
   border: 2px solid #ddd;
+  position: absolute;
+  top: calc(50vh - 240px);
+  left: calc(50vw - 240px);
   display: flex;
   flex-direction: column;
   flex-wrap: nowrap;
-  margin: 20px auto 20px;
+  /*margin: 20px auto 20px;*/
   box-shadow: 3px 3px 2px #333;
 }
 
@@ -117,4 +139,37 @@ h1 {
   display: flex;
   justify-content: center;
   align-items: center;
+  font-family: 'Rock Salt', sans-serif;
+  font-size: 3rem;
+}
+
+.mini-row {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  width: 100px;
+  height: 33.333px;
+}
+
+.mini-square {
+  height: 33.333px;
+  width: 33.333px;
+  border: 1px solid #ddd;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: 'Rock Salt', sans-serif;
+  font-size: 1rem;
+}
+
+.winning-board-container,
+.winning-board-heading {
+  display: none;
+}
+
+@media screen and (max-width: 479px) {
+  .gameboard-container {
+    left: 0;
+  }
 }

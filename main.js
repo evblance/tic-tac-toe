@@ -1,29 +1,25 @@
 /*
-  Additional functionality ideas: 
-  - Implement display of the last winning board below the win statement:
-    "
-    winning board was:
-    O |     | X
-    ------------
-      |  O  | X
-    -----------
-      |     | O
-    "
-
+  Additional functionality ideas:
    - wait for a time difference to elapse before the computer's decision loop atually
       proceeds so that there can be a 'thinking time' associated with the computer's turn
-
-   - Implement a scoreboard to keep track of the games won for each player
-
   */
 
 (function($){
 
+
   $(document).ready(function() {
 
+    // var GAMELOOP_DELAY = undefined;
+    // var GAME_DIFFICULTY = 'hard';
 
-    var GAMELOOP_DELAY = undefined;
-    var GAME_DIFFICULTY = 'hard';
+
+    // function that returns the jQuery object for the corresponding tile number
+    function tileToDOMObject(prefix, tileNumber) {
+      var IDString = prefix + tileNumber;
+      var $tile = $(IDString);
+
+      return $tile;
+    }
 
     var Board = function() {
       // if a click is valid, decrement this value
@@ -31,8 +27,23 @@
       this.blankTiles = [0,1,2,3,4,5,6,7,8],
       this.occupiedTiles = [],
       this.gameOver = true,
-      this.result = undefined
+      this.result = undefined,
+      this.score = { 'Computer': 0, 'Human': 0 }
     };
+
+    Board.prototype.drawBoard = function(gamerArr) {
+      // function that draws the game's winning board
+      var gamerTileArr;
+      var gamerPiece;
+      gamerArr.forEach(function(gamer) {
+        gamerTileArr = gamer.tiles;
+        gamerPiece = gamer.gamepiece;
+
+        gamerTileArr.forEach(function(tile) {
+          tileToDOMObject('#ms', tile).html(gamerPiece);
+        });
+      });
+    }
 
     Board.prototype.occupyTile = function(tileNumber) {
       // this function needs to remove a tile from the blank array
@@ -86,11 +97,10 @@
           return;
         }
       });
-      // console.log(completion);
 
       if ( gameWon === true ) {
         this.result = gamer.name + ' won!';
-        // console.log(this.result);
+        board.score[gamer.name]++;
       }
 
       return;
@@ -135,7 +145,8 @@
     var Computer = function() {
       this.name = 'Computer',
       this.tiles = [],
-      this.moveInProgress = false,
+      this.moveInProgress = false, // TODO: use this property to call a timer in move method when switched to true
+                                   //       which only allows the move to be made after a couple of seconds have elapsed
       this.turn = false,
       this.gamepiece = undefined,
       this.tempPoints = [];
@@ -153,6 +164,9 @@
     // the function where the computer decides what to do
     Computer.prototype.move = function() {
       if ( this.moveInProgress ) {
+        // TODO: >>>
+        console.log('i ran');
+        console.log('Computer is thinking...');
         return;
       } else {
         this.moveInProgress = true;
@@ -177,20 +191,10 @@
       return player.tiles;
     };
 
-    //
-    // if ( tileNumber >= 6 ) {
-    //   colIndex = 2;
-    // } else if ( tileNumber >= 3 ) {
-    //   rowIndex = 1;
-    // } else {
-    //   rowIndex = 0;
-    // }
-    // colIndex = tileNumber % 3;
-
-
     Computer.prototype.interpretBoard = function(blankTiles, playerTiles, computerTiles) {
-      // grid the tiles, perform math to derive an array of (best) positions available for move
-      // TODO: write the proper logic here, currently returning only the blank tiles
+      // could alternatively take a difficulty paramater as well, and return
+      // eg. [[2],[4,6,7],[8]]   instead of  [2, 3, 5]
+      //      hard  med   easy        default
 
       var choices = [];
 
@@ -248,7 +252,6 @@
             setsOfInterest.push(targetSets[i]);
           }
         }
-
         // TODO: DRY setsOfInterest.forEach code into a function call
         setsOfInterest.forEach(function(set) {
           for (var i = 0; i < 3; i++) {
@@ -283,7 +286,6 @@
               setsOfInterest.push(targetSets[i]);
             }
           }
-
           setsOfInterest.forEach(function(set) {
             for (var i = 0; i < 3; i++) {
               for (var j = 0; j < blankTiles.length; j++) {
@@ -300,12 +302,12 @@
           }
         }
 
-
-
-        // else (indent), finally...
+        // If we did not find a winning choice above, or a player stopping move...
         // is a blank space within 1 (row adjacent) or +/- 3 (col adjacent)?
         for (var i = 0; i < computerTiles.length; i++) {
           for (var j = 0; j < blankTiles.length; j++) {
+            // NOTE: could introduce a switch statement here with a random roll deciding which
+            //        course to take (horizontal or vertical)
             if ( blankTiles[j] === computerTiles[i] + 1 || blankTiles[j] === computerTiles[i] - 1 ) {
               choices.push(blankTiles[j]);
             } else if ( blankTiles[j] === computerTiles[i] + 3 || blankTiles[j] === computerTiles[i] - 3 ) {
@@ -324,7 +326,7 @@
         }
       }
 
-      // make sure we have something meaningful to return
+      // If no better moves, make sure we have something meaningful to return
       if ( choices.length === 0 ) {
         choices = blankTiles;
       }
@@ -332,40 +334,26 @@
       return choices;
     };
 
-    Computer.prototype.tileToDOMObject = function(tileNumber) {
-      // function that returns the jQuery object for the tile
-      // takes the tile number as an argument
-      // may also be called in interpretBoard...
-      var IDString = '#s' + tileNumber;
-      var $tile = $(IDString);
-
-      return $tile;
-    }
-
     Computer.prototype.makeMove = function(blankTiles, playerTiles, computerTiles) {
 
-      // grid and interpret the board, returning an array of ranked choices (in an an array):
-      // eg. [[2],[4,6,7],[8]]
-      // interpret the board to get choices
+      // return an array of choices for making a move
       var choices = this.interpretBoard(blankTiles, playerTiles, computerTiles);
-      // console.log(choices);
-      var choiceArrLength = choices.length;
+      var numChoices = choices.length;
 
-      // make a choice depending on the difficulty level of the game; default (hard) picks the best,
-      // or random of best array.
+      // select a move from available choices
       var computerMove;
       var moveIndex;
-      if ( GAME_DIFFICULTY === 'hard' ) {
-        moveIndex = Math.floor(choiceArrLength * Math.random());
-        // computerMove = choices[moveIndex].length > 1 ? choices[moveIndex][0] : choices[moveIndex];
-        // console.log('choices are ', choices);
+      if ( numChoices > 1 ) {
+        moveIndex = Math.floor(numChoices * Math.random());
         computerMove = choices[moveIndex];
-        // console.log('computer moves to ', computerMove);
+      } else {
+        computerMove = choices[0]
       }
+
       // now mark the space with the chosen move
       board.occupyTile(computerMove);
       this.tiles.push(computerMove);
-      var $tile = this.tileToDOMObject(computerMove);
+      var $tile = tileToDOMObject('#s', computerMove);
       $tile.html(computer.gamepiece);
 
       return;
@@ -376,28 +364,37 @@
         // waiting on player input
         return;
       } else if ( board.movesLeft > 0 && computer.turn ) {
-        // console.log('waiting for computer move');
         computer.move();
       } else {
         // game is over
         board.gameOver = true;
-        // board.result = null;
-         // NOTE: This state will be caught and interacted with using a different view
-                              // sprung by main()
       }
       return;
     }
 
     function reset() {
-      // clear the game board
-      computer.reset();
-      player.reset();
+      if ( board.result !== undefined ) {
+        // show the winning game board display
+        $('.winning-board-container').css('display', 'block');
+      }
+      // show start screen
       $('.start-menu').addClass('start-menu-active');
+      // output game result
       if ( board.result !== null ) {
         $('.game-status').text(board.result);
       } else if ( board.result === null ){
         $('.game-status').text('Tie!');
       }
+      // reset winning board display and draw
+      $('.mini-square').html('');
+      board.drawBoard([computer, player]);
+      // reset players
+      computer.reset();
+      player.reset();
+      // update game score
+      $('#computer-score').html('Computer: ' + board.score['Computer']);
+      $('#player-score').html('Human: ' + board.score['Human']);
+      // reset the board
       board.reset();
       return;
     }
@@ -423,9 +420,7 @@
       var $eventTarget = $(e.target);
 
       if ( board.gameOver ) {
-        /* TODO: Additional functionality that handles clicks on other views */
-        // interpret the clicks on the other view for choosing gamepiece
-        // console.log('the game is over');
+        // interpret the clicks on the modal start screen for choosing gamepiece
         if ( $eventTarget.hasClass('gamepiece-btn') ) {
             if( !($eventTarget.hasClass('gamepiece-btn-active')) ) {
               $('.gamepiece-btn').removeClass('gamepiece-btn-active');
@@ -449,7 +444,7 @@
 
           $('.start-menu').removeClass('start-menu-active');
           $('.gamepiece-btn').removeClass('gamepiece-btn-active');
-          // console.log('the game is now', board);
+
           init();
         }
         return;
