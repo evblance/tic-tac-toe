@@ -1,7 +1,13 @@
 /*
   Additional functionality ideas:
-   - wait for a time difference to elapse before the computer's decision loop atually
+   - wait for a time delta to elapse before the computer's decision loop atually
       proceeds so that there can be a 'thinking time' associated with the computer's turn
+
+  TODO:
+    - A.I. fixes: Computer needs to take the middle if not taken after the first move if player is first
+    - A.I. fixes: Computer must take a corner if player goes first and chooses middle space as the first move
+    - Winning board display logic: The computer should not be allowed to move after player has won
+      (include Gameover condition in computer move code)
   */
 
 (function($){
@@ -375,15 +381,15 @@
     function reset() {
       if ( board.result !== undefined ) {
         // show the winning game board display
-        $('.winning-board-container').css('display', 'block');
+        $('.past-game-container').css('display', 'flex');
       }
       // show start screen
       $('.start-menu').addClass('start-menu-active');
       // output game result
       if ( board.result !== null ) {
-        $('.game-status').text(board.result);
+        $('.game-status-heading').text(board.result);
       } else if ( board.result === null ){
-        $('.game-status').text('Tie!');
+        $('.game-status-heading').text('Tie!');
       }
       // reset winning board display and draw
       $('.mini-square').html('');

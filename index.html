@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 
-<html>
+<html lang="en">
 
 <head>
 
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <title>Tic Tac Toe</title>
+  <title>Tic-Tac-Toe</title>
 
   <link href="https://fonts.googleapis.com/css?family=David+Libre|Rock+Salt" rel="stylesheet">
   <link href="main.css" rel="stylesheet">
@@ -36,40 +36,44 @@
       <div id="s7" class="square"></div>
       <div id="s8" class="square"></div>
     </div>
-  </div>
+  </div><!-- gameboard-container -->
 
   <div class="start-menu">
-    <h1>Tic Tac Toe</h1>
-    <h2 class="score-heading">Score</h2>
+    <h1>Tic-Tac-Toe</h1>
+    <!-- <h2 class="score-heading">Score</h2> -->
     <div class="scoreboard">
       <div id="computer-score" class="score"></div>
       <div id="player-score" class="score"></div>
-    </div>
-    <h2 class="start-heading">Choose your weapon</h2>
-    <div class="buttons">
-      <div class="gamepiece-btn">X</div>
-      <div class="gamepiece-btn">O</div>
-    </div>
-    <div class="start-btn">START</div>
-    <h2 class="game-status"></h2>
-    <div class="winning-board-container">
-      <div id="mr0" class="mini-row">
-        <div id="ms0" class="mini-square"></div>
-        <div id="ms1" class="mini-square"></div>
-        <div id="ms2" class="mini-square"></div>
-      </div>
-      <div id="mr1" class="mini-row">
-        <div id="ms3" class="mini-square"></div>
-        <div id="ms4" class="mini-square"></div>
-        <div id="ms5" class="mini-square"></div>
-      </div>
-      <div id="mr2" class="mini-row">
-        <div id="ms6" class="mini-square"></div>
-        <div id="ms7" class="mini-square"></div>
-        <div id="ms8" class="mini-square"></div>
-      </div>
-    </div>
-  </div>
+    </div><!-- scoreboard -->
+    <div class="gamepiece-container">
+      <h2 class="start-heading">Choose your weapon</h2>
+      <div class="gamepiece-buttons">
+        <div class="gamepiece-btn">X</div>
+        <div class="start-btn">START</div>
+        <div class="gamepiece-btn">O</div>
+      </div><!-- gamepiece-buttons -->
+    </div><!-- gamepiece-container -->
+    <div class="past-game-container">
+      <h2 class="game-status-heading"></h2>
+      <div class="winning-board-container">
+        <div id="mr0" class="mini-row">
+          <div id="ms0" class="mini-square"></div>
+          <div id="ms1" class="mini-square"></div>
+          <div id="ms2" class="mini-square"></div>
+        </div>
+        <div id="mr1" class="mini-row">
+          <div id="ms3" class="mini-square"></div>
+          <div id="ms4" class="mini-square"></div>
+          <div id="ms5" class="mini-square"></div>
+        </div>
+        <div id="mr2" class="mini-row">
+          <div id="ms6" class="mini-square"></div>
+          <div id="ms7" class="mini-square"></div>
+          <div id="ms8" class="mini-square"></div>
+        </div>
+      </div><!-- winning-board-container-->
+    </div><!-- past-game-container -->
+  </div><!-- start-menu -->
 
 </body>
 
