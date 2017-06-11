@@ -6,8 +6,7 @@
   TODO:
     - A.I. fixes: Computer needs to take the middle if not taken after the first move if player is first
     - A.I. fixes: Computer must take a corner if player goes first and chooses middle space as the first move
-    - Winning board display logic: The computer should not be allowed to move after player has won
-      (include Gameover condition in computer move code)
+    - Winning board display logic: The computer should not be allowed to make one more move after the game has ended
   */
 
 (function($){
@@ -69,6 +68,10 @@
       // or whether it is won by the player or computer. If so, it sets this.gameOver to true
       // this must grid to see if there is a winner
 
+      if ( board.gameOver ) {
+        return;
+      }
+
       var winningSets = [ [0,1,2],
                           [3,4,5],
                           [6,7,8],
@@ -96,11 +99,10 @@
       }
 
       var gameWon = false;
-      completion.forEach(function(status) {
-        if ( status === 3 ) {
+      completion.forEach(function(progressCount) {
+        if ( progressCount === 3 ) {
           gameWon = true;
           board.gameOver = true;
-          return;
         }
       });
 
@@ -171,7 +173,6 @@
     Computer.prototype.move = function() {
       if ( this.moveInProgress ) {
         // TODO: >>>
-        console.log('i ran');
         console.log('Computer is thinking...');
         return;
       } else {
@@ -410,7 +411,6 @@
         reset();
         return;
       }
-      // console.log('Board moves left:', board.movesLeft);
       play();
       board.checkForWinner(computer);
       board.checkForWinner(player);
