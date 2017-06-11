@@ -4,7 +4,7 @@ Javascript Tic-Tac-Toe! The classic game of noughts and crosses. You can try and
 ## How-To Run
 
 ### Online
-Go to the following [page](https://evblance.github.io/tic-tac-toe) to play.
+Go to the following [page](https://evblance.github.io/tic-tac-toe/) to play.
 
 ### Offline
 1. Clone or download this repository
